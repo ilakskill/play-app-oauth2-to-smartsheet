@@ -2,18 +2,15 @@ package controllers;
 
 import play.mvc.*;
 import helpers.*;
+import play.Logger;
 
 
 
 public class SmartSheet extends Controller {
 
     public static Result home(){
-
-        System.out.println(Config.getAuthorizationUrl());
-
-
-
-        return ok(views.html.home.render("http://www.google.com/fuck"));
+        Logger.debug("Authorization Url: " + Config.getAuthUrl());
+        return ok(views.html.home.render(Config.getAuthUrl()));
     }
 
 }

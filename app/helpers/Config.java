@@ -2,9 +2,36 @@ package helpers;
 
 import play.Play;
 import play.Logger;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 
 public class Config {
+
+    /**
+     * This builds and urlencodes the authorization url to smartsheet.
+     * @return full url string of the authorization url
+     */
+    public static String getAuthUrl(){
+        String buildUrl = null;
+
+        if(getAuthorizationUrl() != null && getAppClientId() != null && getAppRedirectUrl() != null){
+            try {
+                buildUrl = getAuthorizationUrl() + "?" +
+                "response_type=code&" +
+                "client_id=" + URLEncoder.encode(getAppClientId(), "UTF-8") + "&" +
+                "redirect_uri="  + URLEncoder.encode(getAppRedirectUrl(), "UTF-8") + "&" +
+                "scope=READ_SHEETS%20WRITE_SHEETS&" +
+                "state=MY_STATE";
+
+            } catch (UnsupportedEncodingException e) {
+                Logger.error(e.getMessage());
+            }
+        } else {
+              Logger.error("Could not build authorization url");
+        }
+        return buildUrl;
+    }
 
     /**
      * Gets the authorication url from application.conf
