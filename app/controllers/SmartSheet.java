@@ -1,16 +1,19 @@
 package controllers;
 
 import play.mvc.*;
+import helpers.*;
 
 
 
 public class SmartSheet extends Controller {
 
-    public static Result user(){
+    public static Result home(){
 
-        return ok(views.html.home.render());
+        System.out.println(Config.getAuthorizationUrl());
 
 
+
+        return ok(views.html.home.render("http://www.google.com/fuck"));
     }
 
 }
