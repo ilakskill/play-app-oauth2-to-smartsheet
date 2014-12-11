@@ -22,7 +22,7 @@
                 // Sheets
                 var sheetsList = "";
                 $.each(json.sheets, function(key, value) {
-                    sheetsList += "<li>" + value.name + "</li>";
+                    sheetsList += "<li class='sheets_list'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
                 });
                 if(sheetsList == ""){
                     sheetsList += "<li>No sheets present!</li>";
@@ -32,7 +32,7 @@
                 // Folders
                 var folders = "";
                 $.each(json.folders, function(key, value) {
-                    folders += "<li>" + value.name + "</li>";
+                    folders += "<li class='folder_list' id='"+value.id+"'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
                 });
                 if(folders == ""){
                     folders += "<li>No folder present!</li>";
@@ -42,7 +42,7 @@
                 // Workspaces
                 var workspace = "";
                 $.each(json.workspaces, function(key, value) {
-                    workspace += "<li>" + value.name + "</li>";
+                    workspace += "<li class='workplace_list' id='"+value.id+"'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
                 });
                if(workspace == ""){
                     workspace += "<li>No workspaces present!</li>";
@@ -52,7 +52,7 @@
                 // Templates
                 var template = "";
                 $.each(json.templates, function(key, value) {
-                    template += "<li>" + value.name + "</li>";
+                    template += "<li class='template_list' id='"+value.id+"'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
                 });
                 if(template == ""){
                     template += "<li>No templates present!</li>";
@@ -60,6 +60,16 @@
                 $("div#account_templates ul").html(template);
 
                 });
+
+
+                 $("div#account_sheets ul li.sheets_list a").click(function(event) {
+                     event.preventDefault();
+                    // id = $(this).val();
+
+                     alert("hello");
+                 });
+
+
 
 
             $.fn.getJson = function(url) {
@@ -72,8 +82,6 @@
                 }).responseText;
                 return eval('(' + root + ')');
             }
-
-
 
         });
         </script>
