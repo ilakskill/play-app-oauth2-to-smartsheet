@@ -8,42 +8,50 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <script>
-
         $(document).ready(function() {
             $("#view_account").click(function(event) {
-                console.log("calling view account");
                 event.preventDefault();
-                $.ajax({
-                    type: "GET",
-                    url: "/account",
-                   // data: myusername,
-                    cache: false,
-                    success: function(data){
-                    console.log(data);
-                    $("#view_account_button" ).hide();
-                    }
-                });
+                var json = $(this).getJson('/account');
+                console.log(json);
+                $("#view_account_button").hide();
+                $("#account_name").html("Name: " + json.first_name + " " + json.last_name);
+                $("#account_email").html("Email: " + json.email);
+
+
             });
+
+
+            $.fn.getJson = function(url) {
+                var root = $.ajax({
+                url: url,
+                type: "GET",
+                cache : false,
+                async: false,
+                dataType : 'json'
+                }).responseText;
+                return eval('(' + root + ')');
+            }
+
+
+
         });
         </script>
 
-
-
     </head>
-
-
-
-
-
     <body style="margin:0px; overflow:hidden;" class="clsBody">
-
         <div id="AFXQ" class="clsJspForm clsBorderBox" style="width:1024px; height:500px; position:absolute; left:50%; top:100px; margin-left:-500px;">
-
             <div id="view_account_button" style="text-align:center;margin-top: 100px;">
                 <a id="view_account" href="#">
                     <button style="width:300px;font-size: 14px;font-weight: bold;height: 100px;">View My Smartsheet Account</button>
                 </a>
             </div>
+            <div id="view_account_data">
+                <div id="account_name"></div>
+                <div id="account_email"></div>
+            </div>
+
+
+
 
 
         </div>
