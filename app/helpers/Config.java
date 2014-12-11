@@ -2,20 +2,9 @@ package helpers;
 
 import play.Play;
 import play.Logger;
-
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
-import play.libs.F;
-import play.libs.Json;
-import play.libs.WS;
-import play.Play;
 import java.security.*;
 import org.apache.commons.codec.binary.Hex;
 

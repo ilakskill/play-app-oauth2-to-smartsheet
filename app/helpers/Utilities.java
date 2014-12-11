@@ -75,5 +75,36 @@ public class Utilities {
         return jsonOutput;
     }
 
+    public static JsonNode getRequest(String url, String token){
+        JsonNode jsonOutput = null;
+        try {
+            URL urlPath = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) urlPath.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", "Bearer " + token);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            StringBuilder response = new StringBuilder();
+
+            String output;
+            while ((output = br.readLine()) != null) {
+                response.append(output);
+            }
+            conn.disconnect();
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Logger.debug("Connected to " + url +" status was " + conn.getResponseCode());
+                jsonOutput = Json.parse(response.toString());
+            }
+        } catch (MalformedURLException e) {
+            Logger.error("Error could not connect to " + url + " " + e.getMessage());
+        } catch (IOException e) {
+            Logger.error("ERROR " + e.getMessage());
+        }
+        return jsonOutput;
+    }
+
 
 }

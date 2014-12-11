@@ -1,4 +1,5 @@
-@(accesstoken: String)
+
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -7,36 +8,22 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <script>
-            var token = "@accesstoken";
 
         $(document).ready(function() {
-
-        $("#view_account").click(function(event) {
-            alert("test");
-            event.preventDefault();
-            $.ajax({
-                url: "https://api.smartsheet.com/1.1/home?include=templates",
-                dataType : 'jsonp',
-                beforeSend : function(xhr) {
-                    xhr.setRequestHeader("Authorization", "Bearer " +token);
-                },
-                error : function(data) {
+            $("#view_account").click(function(event) {
+                console.log("calling view account");
+                event.preventDefault();
+                $.ajax({
+                    type: "GET",
+                    url: "/account",
+                   // data: myusername,
+                    cache: false,
+                    success: function(data){
                     console.log(data);
-                // error handler
-                },
-                success: function(data) {
-                console.log(data);
-                }
+                    $("#view_account_button" ).hide();
+                    }
+                });
             });
-        });
-
-
-
-
-
-
-
-
         });
         </script>
 
@@ -50,15 +37,14 @@
 
     <body style="margin:0px; overflow:hidden;" class="clsBody">
 
-        <div id="AFXQ" class="clsJspForm clsBorderBox" style="width:510px; height:360px; position:absolute; left:50%; top:100px; margin-left:-255px;">
+        <div id="AFXQ" class="clsJspForm clsBorderBox" style="width:1024px; height:500px; position:absolute; left:50%; top:100px; margin-left:-500px;">
 
-            <!--
-            TODO change hard-coded url
-            -->
+            <div id="view_account_button" style="text-align:center;margin-top: 100px;">
+                <a id="view_account" href="#">
+                    <button style="width:300px;font-size: 14px;font-weight: bold;height: 100px;">View My Smartsheet Account</button>
+                </a>
+            </div>
 
-            <a id="view_account" href="#">
-                <button>View My Smartsheet Account</button>
-            </a>
 
         </div>
     </body>
