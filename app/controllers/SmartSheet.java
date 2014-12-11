@@ -14,17 +14,26 @@ import org.codehaus.jackson.JsonNode;
 
 public class SmartSheet extends Controller {
 
+    public static String accessToken = null;
+    public static String refreshToken = null;
+
+
     public static Result home(){
-      //  Logger.debug("Authorization Url: " + Config.getAuthUrl());
         Map<String, String> values = Utilities.getQueryParamters(request());
         if(values.size() == 0){
             return redirect(Config.getAuthUrl());
         } else {
 
-            System.out.println(Config.getTokenData(values));
+            if(refreshToken == null){
+                JsonNode node = Utilities.postRequest(Config.getTokenUrl(), Config.getTokenData(values));
+                if(node != null) {
+                    refreshToken = node.get("refresh_token").asText();
+                    accessToken = node.get("access_token").asText();
+                }
+            }
 
-            JsonNode node = Utilities.postRequest(Config.getTokenUrl(), Config.getTokenData(values));
-            System.out.println(node);
+            System.out.println(refreshToken);
+            System.out.println(accessToken);
 
             return ok(views.html.home.render());
         }

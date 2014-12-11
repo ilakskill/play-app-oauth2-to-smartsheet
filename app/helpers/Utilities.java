@@ -37,31 +37,25 @@ public class Utilities {
         return values;
     }
 
+    /**
+     * This does a POST request using Java HttpURLConnection
+     * @param url url to POST to
+     * @param data POST data you are passing
+     * @return JSON
+     */
     public static JsonNode postRequest(String url, String data){
         JsonNode jsonOutput = null;
         try {
-
-
-
             URL urlPath = new URL(url);
             HttpURLConnection conn = (HttpURLConnection) urlPath.openConnection();
             conn.setDoOutput(true);
             conn.setDoInput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
-
-           // String input = json.toString();
             OutputStream os = conn.getOutputStream();
             os.write(data.getBytes());
             os.flush();
 
-            /*
-            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                Logger.error("Error response from "+url+" status was " + conn.getResponseCode());
-            } else {
-                Logger.info("Connected to " + url +" status was " + conn.getResponseCode());
-            }
-            */
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
             StringBuilder response = new StringBuilder();
 
@@ -71,23 +65,10 @@ public class Utilities {
             }
             conn.disconnect();
 
-            jsonOutput = Json.parse(response.toString());
-
-            System.out.println(jsonOutput);
-            System.out.println(response.toString());
-
-               /*
-            try {
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Logger.debug("Connected to " + url +" status was " + conn.getResponseCode());
                 jsonOutput = Json.parse(response.toString());
-            } catch(Exception e){
-                String message = "Pachinko Response: " + response.toString() + " Error Message: " + e.getMessage();
-                Logger.error(message);
-              //  ObjectNode result = ErrorResultHandler.formatJson(null);
-            //    result.put("message", message);
-              //  jsonOutput = result;
-            }    */
-
-
+            }
         } catch (MalformedURLException e) {
             Logger.error("Error could not connect to " + url + " " + e.getMessage());
         } catch (IOException e) {
