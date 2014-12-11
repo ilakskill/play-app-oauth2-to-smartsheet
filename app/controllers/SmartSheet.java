@@ -1,18 +1,27 @@
 package controllers;
 
-import play.libs.Json;
 import play.mvc.*;
 import helpers.*;
 import play.Logger;
 import java.util.*;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
-import org.codehaus.jackson.map.ObjectMapper;
-
 
 
 public class SmartSheet extends Controller {
 
+    /**
+     *  Returns root to home
+     * @return Play JSON Results
+     */
+    public static Result index(){
+        return redirect("/home");
+    }
+
+    /**
+     * This is the main endpoint that display the account page
+     * @return Play JSON Results
+     */
     public static Result home(){
         JsonNode node = null;
         Map<String, String> values = Utilities.getQueryParamters(request());
@@ -28,12 +37,14 @@ public class SmartSheet extends Controller {
                 session("access_token", node.get("access_token").asText());
                 session("refresh_token", node.get("refresh_token").asText());
             }
-            Logger.debug("Current Access Token: " + session("access_token"));
-            Logger.debug("Current Refresh Token: " + session("refresh_token"));
             return ok(views.html.home.render());
         }
     }
 
+    /**
+     * This hits two Smartsheet endpoints /me and /home and combines the JSON and returns
+     * @return Play JSON Results
+     */
     public static Result getAccount(){
         JsonNode user = Utilities.getRequest("https://api.smartsheet.com/1.1/user/me", session("access_token"));
         JsonNode userData = Utilities.getRequest("https://api.smartsheet.com/1.1/home?include=templates", session("access_token"));

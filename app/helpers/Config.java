@@ -9,10 +9,13 @@ import java.security.*;
 import org.apache.commons.codec.binary.Hex;
 
 
-
-
 public class Config {
 
+    /**
+     * This builds the refresh token data
+     * @param refreshToken refresh_token from the original obtained token
+     * @return String
+     */
     public static String getRefreshTokenData(String refreshToken){
         String buildUrl = null;
         if(getTokenUrl() != null){
@@ -30,6 +33,11 @@ public class Config {
     }
 
 
+    /**
+     * This builds the access token data
+     * @param values query paramters from the GET authorization
+     * @return String
+     */
     public static String getTokenData(Map<String, String> values){
         String buildUrl = null;
         if(getTokenUrl() != null && values.size() != 0){
@@ -52,7 +60,6 @@ public class Config {
      */
     public static String getAuthUrl(){
         String buildUrl = null;
-
         if(getAuthorizationUrl() != null && getAppClientId() != null && getAppRedirectUrl() != null){
             try {
                 buildUrl = getAuthorizationUrl() + "?" +
@@ -142,9 +149,8 @@ public class Config {
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Your JVM does not support SHA-256, which is required for OAuth with Smartsheet.", e);
+            throw new RuntimeException("Does not support SHA-256", e);
         }
-
         byte[] digest;
         try {
             digest = md.digest(doHash.getBytes("UTF-8"));

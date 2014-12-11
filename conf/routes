@@ -3,7 +3,7 @@
 # ~~~~
 
 # Home page
-GET        /                    controllers.Application.index()
+GET        /                    controllers.SmartSheet.index()
 GET        /home                controllers.SmartSheet.home()
 GET        /account             controllers.SmartSheet.getAccount()
 

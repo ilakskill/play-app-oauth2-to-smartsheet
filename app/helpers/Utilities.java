@@ -1,7 +1,6 @@
 package helpers;
 
 import play.Logger;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -64,7 +63,6 @@ public class Utilities {
             conn.disconnect();
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Logger.debug("Connected to " + url +" status was " + conn.getResponseCode());
                 jsonOutput = Json.parse(response.toString());
             }
         } catch (MalformedURLException e) {
@@ -75,6 +73,12 @@ public class Utilities {
         return jsonOutput;
     }
 
+    /**
+     * This does a GET request using Java HttpURLConnection
+     * @param url url to GET from
+     * @param token Smartsheet token
+     * @return JSON
+     */
     public static JsonNode getRequest(String url, String token){
         JsonNode jsonOutput = null;
         try {
@@ -95,7 +99,6 @@ public class Utilities {
             conn.disconnect();
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Logger.debug("Connected to " + url +" status was " + conn.getResponseCode());
                 jsonOutput = Json.parse(response.toString());
             }
         } catch (MalformedURLException e) {
