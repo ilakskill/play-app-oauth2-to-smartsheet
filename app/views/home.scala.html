@@ -9,16 +9,57 @@
 
         <script>
         $(document).ready(function() {
+            $("#view_account_data" ).hide();
             $("#view_account").click(function(event) {
                 event.preventDefault();
                 var json = $(this).getJson('/account');
                 console.log(json);
+                $("#view_account_data" ).show();
                 $("#view_account_button").hide();
                 $("#account_name").html("Name: " + json.first_name + " " + json.last_name);
                 $("#account_email").html("Email: " + json.email);
 
+                // Sheets
+                var sheetsList = "";
+                $.each(json.sheets, function(key, value) {
+                    sheetsList += "<li>" + value.name + "</li>";
+                });
+                if(sheetsList == ""){
+                    sheetsList += "<li>No sheets present!</li>";
+                }
+                $("div#account_sheets ul").html(sheetsList);
 
-            });
+                // Folders
+                var folders = "";
+                $.each(json.folders, function(key, value) {
+                    folders += "<li>" + value.name + "</li>";
+                });
+                if(folders == ""){
+                    folders += "<li>No folder present!</li>";
+                }
+                $("div#account_folders ul").html(folders);
+
+                // Workspaces
+                var workspace = "";
+                $.each(json.workspaces, function(key, value) {
+                    workspace += "<li>" + value.name + "</li>";
+                });
+               if(workspace == ""){
+                    workspace += "<li>No workspaces present!</li>";
+                }
+                $("div#account_workplaces ul").html(workspace);
+
+                // Templates
+                var template = "";
+                $.each(json.templates, function(key, value) {
+                    template += "<li>" + value.name + "</li>";
+                });
+                if(template == ""){
+                    template += "<li>No templates present!</li>";
+                }
+                $("div#account_templates ul").html(template);
+
+                });
 
 
             $.fn.getJson = function(url) {
@@ -48,6 +89,22 @@
             <div id="view_account_data">
                 <div id="account_name"></div>
                 <div id="account_email"></div>
+                <div id="account_sheets">
+                    <h3>Sheets:</h3>
+                    <ul></ul>
+                </div>
+                <div id="account_workplaces">
+                    <h3>Workplaces:</h3>
+                    <ul></ul>
+                </div>
+                <div id="account_folders">
+                    <h3>Folders:</h3>
+                    <ul></ul>
+                </div>
+                <div id="account_templates">
+                    <h3>Templates:</h3>
+                    <ul></ul>
+                </div>
             </div>
 
 
