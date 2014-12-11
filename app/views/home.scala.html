@@ -10,6 +10,7 @@
         <script>
         $(document).ready(function() {
             $("#view_account_data" ).hide();
+            $("div#sheet_columns").hide();
             $("#view_account").click(function(event) {
                 event.preventDefault();
                 var json = $(this).getJson('/account');
@@ -22,7 +23,7 @@
                 // Sheets
                 var sheetsList = "";
                 $.each(json.sheets, function(key, value) {
-                    sheetsList += "<li class='sheets_list'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
+                    sheetsList += "<li class='sheets_list'><a class='sheet_link' id='"+value.id+"' href='#'>" + value.name + "</a></li>";
                 });
                 if(sheetsList == ""){
                     sheetsList += "<li>No sheets present!</li>";
@@ -42,7 +43,7 @@
                 // Workspaces
                 var workspace = "";
                 $.each(json.workspaces, function(key, value) {
-                    workspace += "<li class='workplace_list' id='"+value.id+"'><a id='"+value.id+"' href='#'>" + value.name + "</a></li>";
+                    workspace += "<li class='workplace_list' id='"+value.id+"'>" + value.name + "</li>";
                 });
                if(workspace == ""){
                     workspace += "<li>No workspaces present!</li>";
@@ -59,9 +60,22 @@
                 }
                 $("div#account_templates ul").html(template);
 
+                $("a.sheet_link").on( "click", function(event) {
+                    event.preventDefault();
+                    $("div#sheet_columns").show();
+                    var sheetId = $(this).attr('id');
+                    var sheetJson = $(this).getJson('/sheet/' + sheetId);
+                    var sheet_columns = "";
+                    sheet_columns += "<option class='sheet_columns' value=''> Columns for sheet:  " + sheetJson.name + "</option>";
+                    $.each(sheetJson.columns, function(key, value) {
+                        sheet_columns += "<option class='sheet_columns' value='"+value.id+"'>" + value.title + "</option>";
+                    });
+                    $("div#sheet_columns select").html(sheet_columns);
+
                 });
 
 
+            });
 
             $.fn.getJson = function(url) {
                 var root = $.ajax({
@@ -79,7 +93,7 @@
 
     </head>
     <body style="margin:0px; overflow:hidden;" class="clsBody">
-        <div id="AFXQ" class="clsJspForm clsBorderBox" style="width:1024px; height:500px; position:absolute; left:50%; top:100px; margin-left:-500px;">
+        <div id="AFXQ" class="clsJspForm clsBorderBox" style="width:1024px; height:600px; position:absolute; left:50%; top:100px; margin-left:-500px;">
             <div id="view_account_button" style="text-align:center;margin-top: 100px;">
                 <a id="view_account" href="#">
                     <button style="width:300px;font-size: 14px;font-weight: bold;height: 100px;">View My Smartsheet Account</button>
@@ -104,6 +118,12 @@
                     <h3>Templates:</h3>
                     <ul></ul>
                 </div>
+                <div id="sheet_columns">
+                    <h3>Sheets columns:</h3>
+                    <select></select>
+                </div>
+
+
             </div>
 
 

@@ -58,4 +58,21 @@ public class SmartSheet extends Controller {
            return ok(userData);
     }
 
+
+    /**
+     * This gets the sheets by id.
+     * @param sheetId  Id of sheet
+     * @return Play JSON Results
+     */
+    public static Result getSheet(String sheetId){
+        JsonNode sheet = Utilities.getRequest("https://api.smartsheet.com/1.1/sheet/" + sheetId, session("access_token"));
+        if(sheet != null){
+            return ok(sheet);
+        } else {
+            return ok("Sheet with id: " + sheetId + " doesn't exist");
+        }
+    }
+
+
+
 }
