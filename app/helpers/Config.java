@@ -8,18 +8,38 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.ObjectNode;
 import play.libs.F;
 import play.libs.Json;
 import play.libs.WS;
 import play.Play;
+import java.security.*;
+import org.apache.commons.codec.binary.Hex;
 
 
 
 
 public class Config {
 
+
+    public static String getTokenData(Map<String, String> values){
+        String buildUrl = null;
+        if(getTokenUrl() != null && values.size() != 0){
+            try {
+                buildUrl = "grant_type=authorization_code&" +
+                "code="+values.get("code")+"&" +
+                "client_id="+getAppClientId()+"&"+
+                "redirect_uri="+URLEncoder.encode(getAppRedirectUrl(), "UTF-8")+"&"+
+                "hash="+buildSecretHash(values.get("code"))+"";
+            } catch (UnsupportedEncodingException e) {
+                Logger.error(e.getMessage());
+            }
+         }
+        return buildUrl;
+    }
 
     /**
      * This builds and urlencodes the authorization url to smartsheet.
@@ -32,7 +52,7 @@ public class Config {
             try {
                 buildUrl = getAuthorizationUrl() + "?" +
                 "response_type=code&" +
-                "client_id=" + URLEncoder.encode(getAppClientId(), "UTF-8") + "&" +
+                "client_id=" + getAppClientId() + "&" +
                 "redirect_uri="  + URLEncoder.encode(getAppRedirectUrl(), "UTF-8") + "&" +
                 "scope=READ_SHEETS%20WRITE_SHEETS&" +
                 "state=MY_STATE";
@@ -44,6 +64,18 @@ public class Config {
               Logger.error("Could not build authorization url");
         }
         return buildUrl;
+    }
+
+    /**
+     * Gets the token url from application.conf
+     * @return string of token url
+     */
+    public static String getTokenUrl(){
+        String url = Play.application().configuration().getString("smartsheet.token.url");
+        if(url == null){
+            Logger.error("Token url is null");
+        }
+        return url;
     }
 
     /**
@@ -71,6 +103,18 @@ public class Config {
     }
 
     /**
+     * This returns the application secret key that was created in Smartsheet developer tools
+     * @return string of secret key from registered smartsheet app
+     */
+    public static String getAppSecret(){
+        String client = Play.application().configuration().getString("smartsheet.secret.key");
+        if(client == null){
+            Logger.error("Secret key is null");
+        }
+        return client;
+    }
+
+    /**
      * This returns the redirect_url that was created in Smartsheet developers tools.
      * @return string of the redirect url from registered smartsheet app
      */
@@ -80,6 +124,34 @@ public class Config {
             Logger.error("Redirect url is null");
         }
         return client;
+    }
+
+    /**
+     * This builds the secret hash to use to obtain token.
+     * @param code code from the authorization GET
+     * @return String
+     */
+    public static String buildSecretHash(String code){
+        String doHash = getAppSecret() + "|" + code;
+
+        System.out.println(getAppSecret() + "|" + code);
+
+
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Your JVM does not support SHA-256, which is required for OAuth with Smartsheet.", e);
+        }
+
+        byte[] digest;
+        try {
+            digest = md.digest(doHash.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new String(Hex.encodeHex(digest));
     }
 
 }

@@ -8,18 +8,25 @@ import play.libs.*;
 import play.libs.F.Promise;
 import play.libs.WS;
 import play.Play;
+import org.codehaus.jackson.JsonNode;
 
 
 
 public class SmartSheet extends Controller {
 
     public static Result home(){
-        Logger.debug("Authorization Url: " + Config.getAuthUrl());
+      //  Logger.debug("Authorization Url: " + Config.getAuthUrl());
         Map<String, String> values = Utilities.getQueryParamters(request());
         if(values.size() == 0){
             return redirect(Config.getAuthUrl());
         } else {
-            return ok(views.html.home.render(Config.getAuthUrl()));
+
+            System.out.println(Config.getTokenData(values));
+
+            JsonNode node = Utilities.postRequest(Config.getTokenUrl(), Config.getTokenData(values));
+            System.out.println(node);
+
+            return ok(views.html.home.render());
         }
     }
 
