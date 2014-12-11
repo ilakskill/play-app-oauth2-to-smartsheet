@@ -24,6 +24,22 @@ import org.apache.commons.codec.binary.Hex;
 
 public class Config {
 
+    public static String getRefreshTokenData(String refreshToken){
+        String buildUrl = null;
+        if(getTokenUrl() != null){
+            try {
+                buildUrl = "grant_type=refresh_token&" +
+                        "client_id="+getAppClientId()+"&"+
+                        "refresh_token="+refreshToken+"&"+
+                        "redirect_uri="+URLEncoder.encode(getAppRedirectUrl(), "UTF-8")+"&"+
+                        "hash="+buildSecretHash(refreshToken)+"";
+            } catch (UnsupportedEncodingException e) {
+                Logger.error(e.getMessage());
+            }
+        }
+        return buildUrl;
+    }
+
 
     public static String getTokenData(Map<String, String> values){
         String buildUrl = null;
@@ -133,10 +149,6 @@ public class Config {
      */
     public static String buildSecretHash(String code){
         String doHash = getAppSecret() + "|" + code;
-
-        System.out.println(getAppSecret() + "|" + code);
-
-
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
@@ -153,5 +165,4 @@ public class Config {
 
         return new String(Hex.encodeHex(digest));
     }
-
 }

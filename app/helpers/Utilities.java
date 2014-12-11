@@ -12,7 +12,6 @@ import java.net.URL;
 import java.util.*;
 import play.mvc.Http.Request;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.node.ObjectNode;
 import play.libs.Json;
 
 public class Utilities {
@@ -31,7 +30,6 @@ public class Utilities {
             final String value = Arrays.toString(entry.getValue())
                     .replace("[", "")
                     .replace("]", "");
-            Logger.debug(key + " " + value);
             values.put(key, value);
         }
         return values;
@@ -72,7 +70,7 @@ public class Utilities {
         } catch (MalformedURLException e) {
             Logger.error("Error could not connect to " + url + " " + e.getMessage());
         } catch (IOException e) {
-            Logger.error(e.getMessage());
+            Logger.error("ERROR " + e.getMessage());
         }
         return jsonOutput;
     }

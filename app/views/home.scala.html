@@ -1,3 +1,4 @@
+@(accesstoken: String)
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +7,29 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
         <script>
+            var token = "@accesstoken";
+
         $(document).ready(function() {
+
+        $("#view_account").click(function(event) {
+            alert("test");
+            event.preventDefault();
+            $.ajax({
+                url: "https://api.smartsheet.com/1.1/home?include=templates",
+                dataType : 'jsonp',
+                beforeSend : function(xhr) {
+                    xhr.setRequestHeader("Authorization", "Bearer " +token);
+                },
+                error : function(data) {
+                    console.log(data);
+                // error handler
+                },
+                success: function(data) {
+                console.log(data);
+                }
+            });
+        });
+
 
 
 
@@ -33,7 +56,7 @@
             TODO change hard-coded url
             -->
 
-            <a href="http://localhost:9011/home">
+            <a id="view_account" href="#">
                 <button>View My Smartsheet Account</button>
             </a>
 
